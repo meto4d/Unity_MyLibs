@@ -1,8 +1,9 @@
 ﻿Shader "Custom/Macedonia" {
 	Properties {
-		_Flag("Flag flag", Range(0,1)) = 0.0
-		_ColorB("Color", Color) = (1,0,0.101,1)
-		_ColorF("Color", Color) = (1,1,0,1)
+		_Flag("Flag flag", Range(0,1)) = 0.125
+		_FlagE("Flag Edge", Range(0,1)) = 0.03
+		_ColorB("ColorB", Color) = (1,0,0.101,1)
+		_ColorF("ColorF", Color) = (1,1,0,1)
 		_Resolut("Resolution", float) = 10.0
 		_AngAcc("Angular Acceleration", float) = 1.0
 
@@ -31,6 +32,7 @@
 		#pragma target 3.0
 
 		float  _Flag;
+		float  _FlagE;
 		float4 _ColorB;
 		float4 _ColorF;
 		float  _Resolut;
@@ -72,10 +74,12 @@
 		// フラグメントシェーダ
 		float4 frag(v2f i) : SV_Target
 		{
+			float r = sqrt(pow(i.uv.y - 0.5, 2) + pow(i.uv.x - 0.5, 2));
+
 			return lerp(
-					lerp(_ColorB, _ColorF, step(sqrt(pow(i.uv.y - 0.5, 2) + pow(i.uv.x - 0.5, 2)), _Flag * Inver2)),
-					_ColorF, 
-					step(sin(_Resolut * (atan2(i.uv.y  - 0.5, i.uv.x - 0.5) + _Time.y * _AngAcc)), 0)
+				lerp(_ColorB, _ColorF, step(sin(_Resolut * (atan2(i.uv.y - 0.5, i.uv.x - 0.5) + _Time.y * _AngAcc)), 0.0)),
+				lerp(_ColorB, _ColorF, step(r, _Flag * Inver2)),
+				step(r, (_Flag + _FlagE) * Inver2)
 			);
 		}
 
