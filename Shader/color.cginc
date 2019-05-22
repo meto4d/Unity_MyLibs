@@ -1,6 +1,4 @@
 //#include "UnityCG.cginc"
-#define PI 3.1415926535897932384626433832795028841971693993
-#define FLT_MIN          1.175494351e-38F
 
 inline float3 RGB2HSV(float3 rgb)
 {
